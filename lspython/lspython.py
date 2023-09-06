@@ -182,9 +182,16 @@ class LsPython:
         """ 
         A basic loop manager to make this P.O.S POC a minimum functional and feel like the core of the real ls
         """
-        if path == "":
+        if path in ("", "."):
             content = os.listdir(".")
-            self.list_files(content)
+            return self.list_files(content)
+        if ".." in path:
+            tmp = os.getcwd()
+            os.chdir(path)
+            content = os.listdir(".")
+            status = self.list_files(content)
+            os.chdir(tmp)
+            return status
         if isinstance(path, list):
             global_status = self.success
             for item in path:
@@ -205,13 +212,15 @@ class LsPython:
 
 if __name__ == '__main__':
     LS = LsPython()
-    if len(sys.argv) == 1:
-        files = os.listdir(".")
-    else:
-        files = sys.argv[1:]
-
+    file = os.listdir()
+    for i in range(len(file), 0, -1):
+        if os.path.isfile(file[i-1]):
+            file = file[i-1]
+            break
+        if i == 0:
+            file = file[i-1]
     print("With a simple file:")
-    print(f"status={LS.ls(files)}")
+    print(f"status={LS.ls(file)}")
     print("With a full blown path:")
     print(f"status={LS.ls(os.getcwd())}")
     data = [
@@ -222,3 +231,11 @@ if __name__ == '__main__':
     ]
     print("With a list of paths:")
     print(f"status={LS.ls(data)}")
+    print("With ..")
+    print(f"status={LS.ls('..')}")
+    print("With .")
+    print(f"status={LS.ls('.')}")
+    print("With a non existing file:")
+    print(f"status={LS.ls('non_existing_file')}")
+    print("With a non existing path:")
+    print(f"status={LS.ls('non/existing/path')}")
