@@ -4,6 +4,8 @@
 # Setuptools folders
 /dist/
 /build/
+**/wenv/**
+**/.vscode/**
 
 # Python egg metadata
 /*.egg-info
