@@ -1,1 +1,1 @@
-from .lspython import *
+from .lspython import LsPython
